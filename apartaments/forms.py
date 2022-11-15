@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField
-from wtforms.validators import DataRequired, URL
+from wtforms.validators import DataRequired, URL, EqualTo
 from flask_ckeditor import CKEditorField
 
 # Naudotojo registracijos forma
@@ -10,7 +10,23 @@ class UserRegistrationForm(FlaskForm):
     username = StringField("Prisijungimo vardas", validators=[DataRequired()])
     email = StringField("El. paštas", validators=[DataRequired()])
     password = PasswordField("Slaptažodis", validators=[DataRequired()])
+    confirm_password = PasswordField("Pakartoti slaptažodį", validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField("Registruotis")
+
+class UserLoginForm(FlaskForm):
+    username = StringField("Prisijungimo vardas", validators=[DataRequired()])
+    password = PasswordField("Slaptažodis", validators=[DataRequired()])
+    submit = SubmitField("Prisijungti")
+
+# Naudotojo registracijos forma
+class UpdateProfileForm(FlaskForm):
+    name = StringField("Vardas", validators=[DataRequired()])
+    last_name = StringField("Pavardė", validators=[DataRequired()])
+    username = StringField("Prisijungimo vardas", validators=[DataRequired()])
+    email = StringField("El. paštas", validators=[DataRequired()])
+    password = PasswordField("Slaptažodis", validators=[DataRequired()])
+    confirm_password = PasswordField("Pakartoti slaptažodį", validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField("Išsaugoti")
 
 #Nuomotojo registracijos forma
 class VendorRegistrationForm(FlaskForm):
