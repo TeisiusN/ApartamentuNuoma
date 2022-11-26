@@ -1,0 +1,30 @@
+{% include "header.html" %}
+<div class="px-4 py-5 my-5 text-center">
+  {% if history %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+        <th scope="col">Column heading</th>
+        <th scope="col">Column heading</th>
+        <th scope="col">Column heading</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for hist in history %}
+        <tr>
+          <th scope="row">{{ hist.id }}</th>
+          <td>{{ hist.arrival_date}}</td>
+          <td>{{ hist.departure_date}}</td>
+          <td>{{ hist.num_of_persons}}</td>
+        </tr>
+      {% endfor %}
+  {% else %}
+    <h3>Jūsų neturi užsakymų istorijos</h3>
+  {% endif %}
+
+    </tbody>
+  </table>
+</div>
+
+{% include "footer.html" %}

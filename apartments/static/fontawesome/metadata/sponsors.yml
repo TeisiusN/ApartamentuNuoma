@@ -628,7 +628,7 @@ pindigo:
     - pinball
     - person-pinball
   label: Pindigo
-  url: 'https://pindigo.apartaments'
+  url: 'https://pindigo.apartments'
 play-shakespeare:
   icons:
     - user-shakespeare
