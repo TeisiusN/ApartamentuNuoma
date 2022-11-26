@@ -40,19 +40,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="{{ url_for('main_page') }}">Pagrindinis
-              <span class="visually-hidden">(current)</span>
-            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('profile_page') }}">Profilis</a>
           </li>
+          {% if current_user.id == 1%}
           <li class="nav-item">
-            <a class="nav-link" href="#">Antras</a>
+            <a class="nav-link" href="{{ url_for('admin_page') }}">Administratoriaus valdymas</a>
           </li>
+          {% endif %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Trečias</a>
+            <a class="nav-link" href="#">Nuomotojo valdymas</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>

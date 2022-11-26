@@ -1,9 +1,10 @@
 from flask import render_template, url_for, redirect, flash, request
 from apartments import app, db
-from apartments.forms import UserRegistrationForm, BookingForm, UpdateProfileForm, UserLoginForm, VendorRegistrationForm
+from apartments.forms import UserRegistrationForm, BookingForm, UpdateProfileForm, UserLoginForm, VendorRegistrationForm, FeedbackForm
 from apartments.models import User, PropertyOwner, Apartment, Tenant, Room, RoomType, Feedback, room_reservation, \
     BookingStatus, Booking, Bill, Payment, admin_only, owner_only
 from flask_login import login_user, current_user, logout_user, login_required
+import datetime
 
 
 @app.route("/")
@@ -120,17 +121,80 @@ def profile_page():
 @login_required
 # @owner_only
 def history_page():
-    print(current_user.id)
-    user_tenant_id = Tenant.query.filter(Tenant.fk_user_id == current_user.id).with_entities(Tenant.id).all()
-    try:
-        result = Booking.query.filter(Booking.fk_tenant_id == user_tenant_id[0][0]).filter(Booking.status == BookingStatus.finished).all()
-    except IndexError:
+    if Tenant.query.get(current_user.id):
+        user = Tenant.query.get(current_user.id)
+        result = Booking.query.filter(Booking.fk_tenant_id == user.id).filter(Booking.status == BookingStatus.finished).all()
+
+    else:
         result = []
 
-    print(result[0].id)
-    test = db.session.query(room_reservation, Booking, Room).join(Booking).join(Room).all()
-    print(test)
-    for room_res, booking_res, booking, room in test:
-        print(room_res, booking_res, booking.id, room.id)
+    # print(result[0].id)
+    # test = db.session.query(room_reservation, Booking, Room).join(Booking).join(Room).all()
+    # print(test)
+    # for room_res, booking_res, booking, room in test:
+    #     print(room_res, booking_res, booking.id, room.id)
 
     return render_template("booking-history.html", history=result)
+
+@app.route("/feedback-form/<int:booking_id>", methods=["GET", "POST"])
+@login_required
+def create_feedback(booking_id):
+    requested_booking = Booking.query.get(booking_id)
+    user = Tenant.query.get(current_user.id)
+    form = FeedbackForm()
+
+    if form.validate_on_submit():
+        new_feedback = Feedback(
+            overall_assessment=form.overall_assessment.data,
+            staff_assessment=form.staff_assessment.data,
+            comfort_assessment=form.comfort_assessment.data,
+            cleanliness_assessment=form.cleanliness_assessment.data,
+            place_assessment=form.place_assessment.data,
+            comment=form.comment.data,
+            date=datetime.datetime.now(),
+            fk_apartment_id=requested_booking.id,
+            fk_tenant_id=user.id
+        )
+        db.session.add(new_feedback)
+        db.session.commit()
+        return redirect(url_for("history_page"))
+    return render_template("feedback-form.html", booking=requested_booking, form=form)
+
+@app.route("/feedback-form/<int:booking_id>", methods=["GET", "POST"])
+@login_required
+def edit_feedback(booking_id):
+    requested_booking = Booking.query.get(booking_id)
+    user = Tenant.query.get(current_user.id)
+    requested_feedback = Feedback.query.get(user.id)
+
+    result = Booking.query.join(room_reservation).join(Room).join(Apartment).join(Feedback).all()
+    print(result)
+
+    edit_form = FeedbackForm(
+
+    )
+    # overall_assessment = form.overall_assessment.data,
+    # staff_assessment = form.staff_assessment.data,
+    # comfort_assessment = form.comfort_assessment.data,
+    # cleanliness_assessment = form.cleanliness_assessment.data,
+    # place_assessment = form.place_assessment.data,
+    # comment = form.comment.data,
+    # date = datetime.datetime.now(),
+
+    # if edit_form.validate_on_submit():
+    #     new_feedback = Feedback(
+    #
+    #         fk_apartment_id=requested_booking.id,
+    #         fk_tenant_id=user.id
+    #     )
+    #     db.session.add(new_feedback)
+    #     db.session.commit()
+    #     return redirect(url_for("history_page"))
+    return render_template("feedback-form.html", booking=requested_booking, form=edit_form, is_edit=True)
+
+@app.route("/admin-list")
+@login_required
+@admin_only
+def admin_page():
+    user_list = User.query.all()
+    return render_template("admin-list.html", user_list=user_list)

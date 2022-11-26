@@ -22,5 +22,5 @@ login_manager.login_message_category = 'info'
 from apartments import routes
 
 with app.app_context():
-    db.create_all()
+    # db.create_all()
     pass

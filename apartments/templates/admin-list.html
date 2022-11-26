@@ -2,5 +2,37 @@
 
 <!--Administratoriaus funkcija, kurioje gali matyti naudotojų sąrašą-->
 <!--Kodas-->
+<div class="container">
+  <div class="px-4 py-5 my-5 text-center">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Vardas</th>
+          <th scope="col">Pavardė</th>
+          <th scope="col">El. paštas</th>
+          <th scope="col">Slapyvardis</th>
+          <th scope="col">Tel. numeris</th>
+          <th scope="col">Panaikinti naudotoją</th>
+          <th scope="col">Peržiūrėti atsiliepimus</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in user_list %}
+          <tr>
+            <th scope="row">{{ user.id }}</th>
+            <td>{{ user.name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.phone_number }}</td>
+            <td><a class="btn btn-link" href="#">Panaikinti naudotoją</a></td>
+            <td><a class="btn btn-link" href="#">Peržiūrėti atsiliepimus</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
 {% include "footer.html" %}

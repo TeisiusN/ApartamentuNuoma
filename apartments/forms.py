@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, SubmitField, PasswordField, SelectField, DateField, IntegerField
-from wtforms.validators import DataRequired, URL, EqualTo, Email, ValidationError
+from wtforms.validators import DataRequired, URL, EqualTo, Email, ValidationError, NumberRange
 from flask_ckeditor import CKEditorField
 from apartments.models import User
 
@@ -73,6 +73,15 @@ class BookingForm(FlaskForm):
     room_type = SelectField('Kambario tipas', validators=[DataRequired()])
     arrival_date = DateField('Atvykimo data', validators=[DataRequired()])
     departure_date = DateField('Išvykimo data', validators=[DataRequired()])
-    people_nr = StringField('Žmonių skaičius', validators=[DataRequired()])
+    people_nr = IntegerField('Žmonių skaičius', validators=[DataRequired()])
     submit = SubmitField("Užsakyti")
 
+# Atsiliepimo forma
+class FeedbackForm(FlaskForm):
+    overall_assessment = IntegerField("Bendras vertinimas (1-10)", validators=[DataRequired(), NumberRange(min=0, max=10)])
+    staff_assessment = IntegerField("Personalo įvertinimas (1-10)", validators=[DataRequired(), NumberRange(min=0, max=10)])
+    comfort_assessment = IntegerField("Komforto vertinimas (1-10)", validators=[DataRequired(), NumberRange(min=0, max=10)])
+    cleanliness_assessment = IntegerField("Švaros vertinimas (1-10)", validators=[DataRequired(), NumberRange(min=0, max=10)])
+    place_assessment = IntegerField("Vietos vertinimas (1-10)", validators=[DataRequired(), NumberRange(min=0, max=10)])
+    comment = StringField("Komentaras", validators=[DataRequired()])
+    submit = SubmitField("Įrašyti")
