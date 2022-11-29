@@ -1,8 +1,9 @@
 import enum
+
 from apartments import db, login_manager
 from flask_login import UserMixin, current_user
 from sqlalchemy.orm import relationship
-import datetime
+from datetime import datetime
 from functools import wraps
 from flask import abort
 
@@ -48,6 +49,7 @@ class PropertyOwner(UserMixin, db.Model):
     __tablename__ = "nuomotojas"
     id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String(100), nullable=False)
+    company_code = db.Column(db.Integer, nullable=False, unique=True)
     apartment = relationship("Apartment", back_populates="property_owner")
     user = relationship("User", back_populates="property_owner")
     fk_user_id = db.Column(db.Integer, db.ForeignKey("naudotojas.id"))
@@ -116,11 +118,13 @@ class Feedback(db.Model):
     cleanliness_assessment = db.Column(db.Integer, nullable=False)
     place_assessment = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    date = db.Column(db.DateTime, nullable=False, default=datetime.strftime(datetime.today(), "%Y-%m-%d"))
     apartment = relationship("Apartment", back_populates="feedback")
     tenant = relationship("Tenant", back_populates="feedback")
+    booking = relationship("Booking", back_populates="feedback")
     fk_apartment_id = db.Column(db.Integer, db.ForeignKey("apartamentai.id"))
     fk_tenant_id = db.Column(db.Integer, db.ForeignKey("nuomininkas.id"))
+    fk_booking_id = db.Column(db.Integer, db.ForeignKey("uzsakymas.id"))
 
 
 class BookingStatus(enum.Enum):
@@ -138,14 +142,18 @@ class Booking(db.Model):
     tenant = relationship("Tenant", back_populates="booking")
     bill = relationship("Bill", back_populates="booking")
     room = relationship("Room", secondary=room_reservation, back_populates="booking")
+    feedback = relationship("Feedback", back_populates="booking")
     fk_tenant_id = db.Column(db.Integer, db.ForeignKey("nuomininkas.id"))
     fk_bill_id = db.Column(db.Integer, db.ForeignKey("saskaita.id"))
+
 
 class Bill(db.Model):
     __tablename__ = "saskaita"
     id = db.Column(db.Integer, primary_key=True)
-    room_bill = db.Column(db.Float(20), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    room_fees = db.Column(db.Float(20), nullable=False)
+    breakfast_fees = db.Column(db.Float(20), nullable=False)
+    other_fees = db.Column(db.Float(20), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.strftime(datetime.today(), "%Y-%m-%d"))
     tenant = relationship("Tenant", back_populates="bill")
     booking = relationship("Booking", back_populates="bill")
     payment = relationship("Payment", back_populates="bill")
@@ -155,6 +163,6 @@ class Payment(db.Model):
     __tablename__ = "apmokejimas"
     id = db.Column(db.Integer, primary_key=True)
     full_price = db.Column(db.Float(20), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    date = db.Column(db.DateTime, nullable=False, default=datetime.strftime(datetime.today(), "%Y-%m-%d"))
     bill = relationship("Bill", back_populates="payment")
     fk_bill_id = db.Column(db.Integer, db.ForeignKey("saskaita.id"))

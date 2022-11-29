@@ -11,9 +11,12 @@ import datetime
 def main_page():
     return render_template('index.html')
 
+@app.route("/property-owner-list")
+def test():
+
+    return render_template("property-owner-list.html")
 
 @app.route("/apartment")
-@admin_only
 def show_apartment():
     form = BookingForm()
     return render_template('apartment.html', form=form)
