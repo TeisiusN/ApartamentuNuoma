@@ -70,7 +70,6 @@ class VendorRegistrationForm(FlaskForm):
 
 # Užsakymo forma
 class BookingForm(FlaskForm):
-    room_type = SelectField('Kambario tipas', validators=[DataRequired()])
     arrival_date = DateField('Atvykimo data', validators=[DataRequired()])
     departure_date = DateField('Išvykimo data', validators=[DataRequired()])
     people_nr = IntegerField('Žmonių skaičius', validators=[DataRequired()])

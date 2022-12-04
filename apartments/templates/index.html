@@ -6,10 +6,8 @@
 
 <div class="px-4 py-5 my-5 text-center">
   <i class="fa-solid fa-hotel fa-6x"></i>
-  <h1 class="display-5 fw-bold">Apartamentų skelbimai</h1>
+  <h1 class="display-5 fw-bold">Apartamentai</h1>
   <div class="col-lg-6 mx-auto">
-    <p class="lead mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut arcu felis. Praesent nec ex nec leo convallis porttitor et id lectus. Mauris aliquam, nibh et egestas maximus, lacus ipsum rhoncus libero, vitae ornare ante
-      nisl ac odio. Donec ut placerat est. Mauris a elementum erat, sit amet eleifend lacus. Etiam eu semper nunc. Fusce suscipit sagittis est. Nullam sed eros mi.</p>
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
     </div>
   </div>
@@ -22,58 +20,32 @@
 
 <div class="album py-5 bg-light">
   <div class="container">
-
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {% for apartment in apartments_list %}
       <div class="col">
         <div class="card shadow-sm">
-          <img src="{{ url_for('static', filename='img/hotel.jpg') }}" class="img-thumbnail" alt="">
+<!--          <img src="{{ url_for('static', filename='img/hotel.jpg') }}" class="img-thumbnail" alt="">-->
+            <a href="{{ url_for('show_apartment', apartment_id=apartment.id) }}">
+                <img src="{{ apartment.img_url}}" class="img-thumbnail" alt="">
+            </a>
 
           <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <h3>{{ apartment.apartment_name }}</h3>
+            <p class="card-text">{{ apartment.address }}</p>
             <div class="d-flex justify-content-between align-items-center">
               <div class="btn-group">
-                <a href="{{ url_for('show_apartment') }}" type="button" class="btn btn-sm btn-outline-secondary">View</a>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                <a href="{{ url_for('show_apartment', apartment_id=apartment.id) }}" type="button" class="btn btn-sm btn-outline-secondary">Peržiūrėti</a>
               </div>
-              <small class="text-muted">9 mins</small>
+                <small class="text-muted">
+                    {% for star in range(apartment.stars) %}
+                        ⭐
+                    {% endfor %}
+                </small>
             </div>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card shadow-sm">
-          <img src="{{ url_for('static', filename='img/hotel1.jpg') }}" class="img-thumbnail" alt="">
-          <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-              </div>
-              <small class="text-muted">9 mins</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card shadow-sm">
-          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-          </svg>
-
-          <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-              </div>
-              <small class="text-muted">9 mins</small>
-            </div>
-          </div>
-        </div>
-      </div>
+        {% endfor %}
     </div>
   </div>
 </div>

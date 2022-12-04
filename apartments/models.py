@@ -105,6 +105,7 @@ class Room(db.Model):
 class RoomType(db.Model):
     __tablename__ = "kambario_tipas"
     id = db.Column(db.Integer, primary_key=True)
+    # TODO: Pridėti kambario tipo pavadinimą
     price_for_night = db.Column(db.Float(20), nullable=False)
     number_of_beds = db.Column(db.Integer)
     room = relationship("Room", back_populates="room_type")
@@ -135,7 +136,7 @@ class BookingStatus(enum.Enum):
 class Booking(db.Model):
     __tablename__ = "uzsakymas"
     id = db.Column(db.Integer, primary_key=True)
-    arrival_date = db.Column(db.DateTime, nullable=False)
+    arrival_date = db.Column(db.DateTime, nullable=False,)
     departure_date = db.Column(db.DateTime, nullable=False)
     num_of_persons = db.Column(db.Integer, nullable=False)
     status = db.Column(db.Enum(BookingStatus), nullable=False)
@@ -149,6 +150,7 @@ class Booking(db.Model):
 
 class Bill(db.Model):
     __tablename__ = "saskaita"
+    # TODO: Pridėti visos sumos stulpelį
     id = db.Column(db.Integer, primary_key=True)
     room_fees = db.Column(db.Float(20), nullable=False)
     breakfast_fees = db.Column(db.Float(20), nullable=False)
